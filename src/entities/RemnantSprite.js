@@ -1,10 +1,10 @@
 // RemnantSprite.js — Canvas-generated pixel art Remnant (side-view)
-// ~160px tall character for beat-em-up perspective
+// ~108px tall character for beat-em-up perspective
 // All art is code-drawn, no external images
 
-const FRAME_W = 96;
-const FRAME_H = 160;
-const PX = 3; // Each "pixel" drawn as 3x3 for chunky pixel art look
+const FRAME_W = 64;
+const FRAME_H = 108;
+const PX = 2; // Each "pixel" drawn as 2x2 for chunky pixel art look
 
 /**
  * Generate a side-view Remnant sprite sheet.
