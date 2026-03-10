@@ -52,7 +52,7 @@ export default class ArenaScene extends Phaser.Scene {
     playerSprite.body.setCollideWorldBounds(true);
     // Hitbox smaller than visual — centered on lower body
     playerSprite.body.setSize(FRAME_W * 0.4, FRAME_H * 0.3);
-    playerSprite.body.setOffset(FRAME_W * 0.3, FRAME_H * 0.6);
+    playerSprite.body.setOffset(FRAME_W * 0.3, FRAME_H * 0.55);
     playerSprite.setOrigin(0.5, 1); // Anchor at feet
     playerSprite.setDepth(10);
 
@@ -63,7 +63,7 @@ export default class ArenaScene extends Phaser.Scene {
     this.physics.add.existing(enemySprite);
     enemySprite.body.setCollideWorldBounds(true);
     enemySprite.body.setSize(FRAME_W * 0.4, FRAME_H * 0.3);
-    enemySprite.body.setOffset(FRAME_W * 0.3, FRAME_H * 0.6);
+    enemySprite.body.setOffset(FRAME_W * 0.3, FRAME_H * 0.55);
     enemySprite.setOrigin(0.5, 1);
     enemySprite.setDepth(10);
     enemySprite.setFlipX(true); // Face left toward player
@@ -74,7 +74,7 @@ export default class ArenaScene extends Phaser.Scene {
     this.playerFighter = this.combat.createFighter(playerSprite, {
       maxHp: 100,
       atk: 12,
-      range: 70,       // Larger range for bigger sprites
+      range: 50,       // Scaled for smaller sprites
       cooldown: 700,
       speed: 180,
       agility: 250,
@@ -83,7 +83,7 @@ export default class ArenaScene extends Phaser.Scene {
     this.enemyFighter = this.combat.createFighter(enemySprite, {
       maxHp: 100,
       atk: 10,
-      range: 65,
+      range: 48,
       cooldown: 900,
       speed: 150,
       agility: 200,
@@ -109,7 +109,7 @@ export default class ArenaScene extends Phaser.Scene {
     this.hud = new ArenaHUD(this);
 
     // -- Version --
-    this.add.text(8, GAME_HEIGHT - 14, 'Project Starfish v0.2.0', {
+    this.add.text(8, GAME_HEIGHT - 14, 'Project Starfish v0.2.1', {
       fontSize: '8px', color: '#333',
     }).setScrollFactor(0).setDepth(999);
   }
