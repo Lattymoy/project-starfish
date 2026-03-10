@@ -1,7 +1,7 @@
 // GameScene - Main gameplay scene
 // 2D side-scroller, 4-directional movement, portrait mode
 import Phaser from 'phaser';
-import { GAME_WIDTH, GAME_HEIGHT } from '../config/gameConfig.js';
+import { getWidth, getHeight } from '../config/gameConfig.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -16,8 +16,8 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     // -- World bounds (wider than screen for scrolling) --
-    const worldW = GAME_WIDTH * 4;
-    const worldH = GAME_HEIGHT * 2;
+    const worldW = getWidth() * 4;
+    const worldH = getHeight() * 2;
     this.physics.world.setBounds(0, 0, worldW, worldH);
 
     // -- Placeholder ground / background --
@@ -37,7 +37,7 @@ export default class GameScene extends Phaser.Scene {
     gridGfx.strokePath();
 
     // -- Player (placeholder rectangle until we have sprites) --
-    this.player = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, 24, 32, 0x4ecdc4);
+    this.player = this.add.rectangle(getWidth() / 2, getHeight() / 2, 24, 32, 0x4ecdc4);
     this.physics.add.existing(this.player);
     this.player.body.setCollideWorldBounds(true);
 
@@ -91,7 +91,7 @@ export default class GameScene extends Phaser.Scene {
     const deadZone = 10;
 
     this.input.on('pointerdown', (pointer) => {
-      if (pointer.x < GAME_WIDTH / 2) {
+      if (pointer.x < getWidth() / 2) {
         touchStartX = pointer.x;
         touchStartY = pointer.y;
         this.touchInput = { dx: 0, dy: 0 };
@@ -99,7 +99,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.input.on('pointermove', (pointer) => {
-      if (this.touchInput && pointer.isDown && pointer.x < GAME_WIDTH * 0.7) {
+      if (this.touchInput && pointer.isDown && pointer.x < getWidth() * 0.7) {
         const diffX = pointer.x - touchStartX;
         const diffY = pointer.y - touchStartY;
 

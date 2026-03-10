@@ -1,18 +1,22 @@
 // ArenaHUD.js — HP bars and fight status overlay
+// Responsive — reads live screen dimensions
 // All canvas-drawn, no external assets
 
-import { GAME_WIDTH } from '../config/gameConfig.js';
+import { getWidth, getHeight } from '../config/gameConfig.js';
 
 export default class ArenaHUD {
   constructor(scene) {
     this.scene = scene;
     this.container = scene.add.container(0, 0).setScrollFactor(0).setDepth(100);
 
-    // HP bar dimensions
-    this.barW = GAME_WIDTH * 0.38;
-    this.barH = 10;
-    this.barPad = 12;
-    this.barY = 20;
+    const w = getWidth();
+    const h = getHeight();
+
+    // HP bar dimensions — proportional to screen width
+    this.barW = w * 0.38;
+    this.barH = Math.max(8, Math.floor(h * 0.015));
+    this.barPad = Math.floor(w * 0.033);
+    this.barY = Math.floor(h * 0.04);
 
     // Player HP (left side)
     this.playerBarBg = scene.add.rectangle(
@@ -23,12 +27,14 @@ export default class ArenaHUD {
       this.barPad, this.barY, this.barW, this.barH, 0x4ecdc4
     ).setOrigin(0, 0.5);
 
-    this.playerLabel = scene.add.text(this.barPad, this.barY - 12, 'YOU', {
-      fontSize: '8px', color: '#aaa', fontFamily: 'monospace',
+    const labelSize = Math.max(7, Math.floor(h * 0.013)) + 'px';
+
+    this.playerLabel = scene.add.text(this.barPad, this.barY - this.barH, 'YOU', {
+      fontSize: labelSize, color: '#aaa', fontFamily: 'monospace',
     }).setOrigin(0, 0.5);
 
     // Enemy HP (right side)
-    const enemyX = GAME_WIDTH - this.barPad;
+    const enemyX = w - this.barPad;
 
     this.enemyBarBg = scene.add.rectangle(
       enemyX, this.barY, this.barW, this.barH, 0x333333
@@ -38,13 +44,14 @@ export default class ArenaHUD {
       enemyX, this.barY, this.barW, this.barH, 0xe74c3c
     ).setOrigin(1, 0.5);
 
-    this.enemyLabel = scene.add.text(enemyX, this.barY - 12, 'ENEMY', {
-      fontSize: '8px', color: '#aaa', fontFamily: 'monospace',
+    this.enemyLabel = scene.add.text(enemyX, this.barY - this.barH, 'ENEMY', {
+      fontSize: labelSize, color: '#aaa', fontFamily: 'monospace',
     }).setOrigin(1, 0.5);
 
     // Fight result text (hidden by default)
-    this.resultText = scene.add.text(GAME_WIDTH / 2, 200, '', {
-      fontSize: '20px', color: '#fff', fontFamily: 'monospace',
+    const resultSize = Math.max(16, Math.floor(h * 0.035)) + 'px';
+    this.resultText = scene.add.text(w / 2, h * 0.32, '', {
+      fontSize: resultSize, color: '#fff', fontFamily: 'monospace',
       stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5).setAlpha(0);
 
@@ -55,11 +62,6 @@ export default class ArenaHUD {
     ]);
   }
 
-  /**
-   * Update HP bar fills.
-   * @param {object} playerFighter
-   * @param {object} enemyFighter
-   */
   update(playerFighter, enemyFighter) {
     const pRatio = Math.max(0, playerFighter.hp / playerFighter.maxHp);
     this.playerBarFill.width = this.barW * pRatio;
@@ -68,17 +70,14 @@ export default class ArenaHUD {
     this.enemyBarFill.width = this.barW * eRatio;
   }
 
-  /**
-   * Show fight result.
-   * @param {string} result - 'VICTORY' or 'DEFEAT'
-   */
   showResult(result) {
+    const h = getHeight();
     this.resultText.setText(result);
     this.resultText.setColor(result === 'VICTORY' ? '#4ecdc4' : '#e74c3c');
     this.scene.tweens.add({
       targets: this.resultText,
       alpha: 1,
-      y: 180,
+      y: h * 0.28,
       duration: 600,
       ease: 'Back.easeOut',
     });
